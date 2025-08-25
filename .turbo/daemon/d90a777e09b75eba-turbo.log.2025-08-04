@@ -1,0 +1,17 @@
+2025-08-04T08:00:56.606534Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/1.cookie"), AnchoredSystemPathBuf(".turbo/cookies/.turbo-cookie"), AnchoredSystemPathBuf("node_modules/.cache"), AnchoredSystemPathBuf("node_modules/.cache/turbo")}
+2025-08-04T08:00:56.606544Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-08-04T08:00:57.407437Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/client/node_modules/.vite-temp/vite.config.ts.timestamp-1754294457346-0d684b7734f7a.mjs")}
+2025-08-04T08:00:57.407446Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("client"), path: AnchoredSystemPathBuf("apps/client") }}))
+2025-08-04T08:01:11.706733Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/2.cookie")}
+2025-08-04T08:01:11.706746Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-08-04T08:01:12.307018Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/client/node_modules/.vite-temp/vite.config.ts.timestamp-1754294472260-86a3c2f0099ec.mjs")}
+2025-08-04T08:01:12.307027Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("client"), path: AnchoredSystemPathBuf("apps/client") }}))
+2025-08-04T08:01:12.307061Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-08-04T08:01:20.314356Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/3.cookie")}
+2025-08-04T08:01:20.314374Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-08-04T08:01:20.614142Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/client/node_modules/.vite-temp/vite.config.ts.timestamp-1754294480574-02a3f5810e066.mjs")}
+2025-08-04T08:01:20.614153Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("client"), path: AnchoredSystemPathBuf("apps/client") }}))
+2025-08-04T08:01:20.614296Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-08-04T08:01:37.735272Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/client/node_modules/.vite-temp/vite.config.ts.timestamp-1754294497657-7c899ce70ee47.mjs")}
+2025-08-04T08:01:37.735290Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("client"), path: AnchoredSystemPathBuf("apps/client") }}))
+2025-08-04T08:01:37.735323Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
