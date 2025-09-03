@@ -26,7 +26,6 @@ interface EditRecordModalProps {
 
 export function EditRecordModal({ record, isOpen, onClose }: EditRecordModalProps) {
   const queryClient = useQueryClient();
-
   const {
     register,
     handleSubmit,
@@ -59,7 +58,7 @@ export function EditRecordModal({ record, isOpen, onClose }: EditRecordModalProp
     },
   });
 
-  const onSubmit = (data: RecordFormData) => {
+  const onSubmit = async (data: RecordFormData) => {
     // updateMutation.mutate({
     //   id: record._id,
     //   data: {
@@ -75,14 +74,19 @@ export function EditRecordModal({ record, isOpen, onClose }: EditRecordModalProp
 
     const local = recordsCollection.get(record._id);
     console.log('local:', local);
-if (!local) {
-  console.warn(`Record ${record._id} not in local DB yet`);
-  return;
-}
+// if (!local) {
+//   console.warn(`Record ${record._id} not in local DB yet`);
+//   return;
+// }
 
-    recordsCollection.update(record._id, (draft) => {
-      draft.name = data.name;
-      draft.description = data.description
+    // recordsCollection.update(record._id, (draft) => {
+    //   draft.name = data.name;
+    //   draft.description = data.description
+    // });
+
+    await updateMutation.mutateAsync({
+      data: data,
+      id: record._id
     });
 
     onClose();

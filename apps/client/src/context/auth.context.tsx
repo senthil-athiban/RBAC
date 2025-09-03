@@ -33,7 +33,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const loginUserMutation = useLoginUser();
     const registerMutation = useRegisterUser();
     const { data: userDetails, isLoading, isError, error: userError } = useGetUser(true);
-    console.log('userDetails:', userDetails)
 
     useEffect(() => {
         if (isError && userError) {
@@ -54,7 +53,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const login = useCallback((data: LoginPayload) => {
         loginUserMutation.mutate(data, {
             onSuccess: (response) => {
-                console.log('response:', response)
                 const user = response.data.user;
                 const token = response.data.token;
                 localStorage.setItem('token', token)

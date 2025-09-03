@@ -25,7 +25,6 @@ export const generateAccess = (permissionType: PermissionTypes, permissions: Per
     try {
         const user = req.user;
         const access = await hasAccess(permissionType, permissions, user);
-        console.log('access:', access)
         if(access) {
             return nxt();
         }

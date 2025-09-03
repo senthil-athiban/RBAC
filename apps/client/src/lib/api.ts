@@ -7,7 +7,6 @@ const recordApi = {
     editRecord: (recordId: string, payload: { name: string; description?: string }) => axiosInstance.post(`/record/${recordId}`, payload),
     deleteRecord: (recordId: string) => axiosInstance.delete(`/record/${recordId}`),
     createRecord: (payload:{name: string, description?: string}) => {
-        console.log('axio:', axiosInstance)
         return axiosInstance.post(`/record`, payload)
     }
 }

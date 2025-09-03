@@ -9,7 +9,6 @@ interface PublicRouteProps {
 export function PublicRoute({ children }: PublicRouteProps) {
   const { isAuthenticated, isLoading } = useAuth();
   const location = useLocation();
-  console.log('Public isAuthenticated:', isAuthenticated);
 
   if (isLoading) {
     return (

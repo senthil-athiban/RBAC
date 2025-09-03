@@ -44,7 +44,7 @@ router.post('/:recordId', checkUpdateAccess, async (req: Request, res: Response)
         // console.log('user:', user)
         const record = await Record.findOne({ _id: recordId }); // TODO: access only user records. user: user.id
         // console.log('record:', record);
-        return res.status(404).json({ message: 'No record has been found with given id' });
+        // return res.status(404).json({ message: 'No record has been found with given id' });
         if(!record) {
             return res.status(404).json({ message: 'No record has been found with given id' });
         }
