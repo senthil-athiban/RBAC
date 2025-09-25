@@ -1,6 +1,6 @@
 
 // src/routes/records/new.tsx
-import { NewRecordPage } from '../../pages/NewRecordPage';
+import NewRecordPage from '../../pages/NewRecordPage';
 import { ProtectedRoute } from '../../components/auth/ProtectedRoute';
 import { Permissions, PermissionTypes } from 'core';
 

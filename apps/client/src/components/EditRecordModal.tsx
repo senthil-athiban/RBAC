@@ -16,7 +16,7 @@ import { toast } from 'sonner';
 import { recordApi } from '@/lib/api';
 import { RecordFormData, recordSchema } from '@/schema/record';
 import { AxiosError } from 'axios';
-import { recordsCollection } from '@/api/records/queries';
+// import { recordsCollection } from '@/api/records/queries';
 
 interface EditRecordModalProps {
   record: Record;
@@ -72,8 +72,8 @@ export function EditRecordModal({ record, isOpen, onClose }: EditRecordModalProp
     //   }
     // });
 
-    const local = recordsCollection.get(record._id);
-    console.log('local:', local);
+    // const local = recordsCollection.get(record._id);
+    // console.log('local:', local);
 // if (!local) {
 //   console.warn(`Record ${record._id} not in local DB yet`);
 //   return;

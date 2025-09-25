@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Edit, Trash2, Plus, FileText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { EditRecordModal } from '@/components/EditRecordModal';
+// import { EditRecordModal } from '@/components/EditRecordModal';
 import { DeleteRecordModal } from '@/components/DeleteRecordModal';
 
 import { format } from 'date-fns';
@@ -18,11 +18,12 @@ import { AxiosError } from 'axios';
 import UserHasAccess from '@/components/auth/UserHasAccess';
 import { Permissions, PermissionTypes } from 'core';
 import { useAuth } from '@/context/auth.context';
-import loadableVisibility from "react-loadable-visibility/loadable-components";
+import { EditRecordModal } from '@/components/EditRecordModal';
+// import loadableVisibility from "react-loadable-visibility/loadable-components";
 
-const VisibilityEmojiPicker = loadableVisibility(() => import("./emoji"), {
-  fallback: <p>loading...</p>
-});
+// const VisibilityEmojiPicker = loadableVisibility(() => import("./emoji"), {
+//   fallback: <p>loading...</p>
+// });
 
 export function DashboardPage() {
   const [editingRecord, setEditingRecord] = useState<Record | null>(null);
@@ -34,11 +35,6 @@ export function DashboardPage() {
   const { data: records = [], isLoading, isError } = useGetRecords();
 
   const deleteMutation = useDeleteMutation();
-  // const { data: records, isLoading, isError } = useLiveQuery((q) =>
-  //   q.from({ todo: recordsCollection })
-  // );
-
-  // console.log('records:', records);
 
   const handleEdit = (record: Record) => {
     setEditingRecord(record);
@@ -81,9 +77,9 @@ export function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <button onMouseEnter={() => VisibilityEmojiPicker.preload()}>
+      {/* <button onMouseEnter={() => VisibilityEmojiPicker.preload()}>
         Toggle Visibility EmojiPicker
-      </button>
+      </button> */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
@@ -240,11 +236,12 @@ export function DashboardPage() {
       </Card>
 
       
-      <div style={{ height: "600px", background: "#f0f0f0", margin: "20px 0" }}>
+      {/* <div style={{ height: "600px", background: "#f0f0f0", margin: "20px 0" }}>
         Scroll down to see EmojiPicker mount...
       </div>
 
       <VisibilityEmojiPicker />
+       */}
       {editingRecord && (
         <EditRecordModal
           record={editingRecord}

@@ -1,29 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// // src/App.tsx
-// import { RouterProvider } from '@tanstack/react-router';
-// import { router } from './router';
-// import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
-// import { QueryClient } from '@tanstack/react-query';
-// import { createIDBPersister } from './lib/queryClient';
-// import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-// import { Toaster } from 'sonner';
-
-// const queryClient = new QueryClient();
-// const persister = createIDBPersister();
-
-// function App() {
-//   return (
-//     <PersistQueryClientProvider client={queryClient} persistOptions={{ persister }}>
-//       <Toaster />
-//       <ReactQueryDevtools />
-//       <RouterProvider router={router} />
-//     </PersistQueryClientProvider>
-//   );
-// }
-
-// export default App;
-
-
+import { lazy, Suspense } from 'react';
 import { MutationCache, QueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import './App.css';
@@ -31,14 +7,17 @@ import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-rou
 import AuthProvider from './context/auth.context';
 import { LoginPage } from './pages/auth/LoginPage';
 import { RegisterPage } from './pages/auth/RegisterPage';
-import { DashboardPage } from './pages/DashboardPage';
-import { NewRecordPage } from './pages/NewRecordPage';
+// import { DashboardPage } from './pages/DashboardPage';
+const NewRecordPage = lazy(() => import('./pages/NewRecordPage'));
 import { Toaster } from 'sonner';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { PublicRoute } from './components/auth/PublicRoute';
 import { Permissions, PermissionTypes } from 'core';
+// import { createIDBPersister } from './lib/queryClient';
+import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister'
+
+import { DashboardPage } from './pages/DashboardPage';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
-import { createIDBPersister } from './lib/queryClient';
 
 const AuthLayout = () => (
   <div className='w-full'>
@@ -81,7 +60,20 @@ const queryClient = new QueryClient({
   }),
 });
 
-const persister = createIDBPersister();
+const persister = createSyncStoragePersister({
+  storage: window.localStorage,
+})
+
+// const persister = createIDBPersister();
+
+// const dataLoader = (queryClient: QueryClient) =>
+//   async () => {
+//     const query = recordsQuery;
+//     return (
+//       queryClient.getQueryData(query.queryKey) ??
+//       (await queryClient.fetchQuery(query))
+//     )
+//   }
 
 function App() {
   const router = createBrowserRouter([
@@ -90,9 +82,13 @@ function App() {
       element: <AuthLayout />,
       children: [
         {
-          path: '',
+          path: '/',
           element: <PublicLayout />,
           children: [
+            {
+              index: true, // 👈 when path = "/", redirect to /login
+              element: <Navigate to="/login" replace />,
+            },
             {
               path: "/login",
               element: <LoginPage />,
@@ -105,21 +101,37 @@ function App() {
         },
         {
           path: "/dashboard",
+          // loader: async () => {
+          //   const query = recordsQuery;
+          //   // const result = queryClient.getQueryData(query.queryKey) ?? (await queryClient.fetchQuery(query));
+          //   const result = queryClient.ensureQueryData(query);
+          //   console.log('result:', result);
+          //   return result;
+          // },
           element: (
             <ProtectedRoute permissionType={PermissionTypes.RECORDS} permissions={Permissions.READ}>
+              {/* <p>Dash</p> */}
               <DashboardPage />
             </ProtectedRoute>
           )
         },
         {
           path: "/records/new",
+          // loader: async () => {
+          //   const query = recordsQuery;
+          //   const result = queryClient.getQueryData(query.queryKey) ?? (await queryClient.fetchQuery(query));
+          //   console.log('result:', result);
+          //   return result;
+          // },
           element: (
-            <ProtectedRoute permissionType={PermissionTypes.RECORDS} permissions={Permissions.CREATE}>
-              <NewRecordPage />
-            </ProtectedRoute>
+            <Suspense fallback={<p>Loading...</p>}>
+              <ProtectedRoute permissionType={PermissionTypes.RECORDS} permissions={Permissions.CREATE}>
+                <NewRecordPage />
+              </ProtectedRoute>
+            </Suspense>
           )
         },
-        { path: '*', element: <Navigate to="/dashboard" replace /> }
+        { path: '*', element: <Navigate to="/login" replace /> }
       ]
     }
   ]);

@@ -12,9 +12,12 @@ import { ArrowLeft, Save, FileText } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAddRecord } from '@/api/records/mutation';
 import { RecordFormData, recordSchema } from '@/schema/record';
+import { useGetRecords } from '@/api/records/queries';
+import { onlineManager } from '@tanstack/react-query';
 
-export function NewRecordPage() {
+function NewRecordPage() {
   const navigate = useNavigate();
+  useGetRecords();
 
   const {
     register,
@@ -25,6 +28,8 @@ export function NewRecordPage() {
   });
 
   const createMutation = useAddRecord();
+  console.log("createMutation.isPending: ", createMutation.isPending);
+  console.log('createMutation.isSuccess', createMutation.isSuccess);
 
   const onSubmit = (data: RecordFormData) => {
     createMutation.mutate({
@@ -32,10 +37,12 @@ export function NewRecordPage() {
       description: data.description || undefined,
     }, {
       onSuccess: () => {
-        toast.success('Record created successfully')
-        navigate('/dashboard');
+        
       }
     });
+    console.log('reaching here....')
+    toast.success('Record created successfully')
+        navigate('/dashboard');
   };
 
   return (
@@ -123,7 +130,7 @@ export function NewRecordPage() {
                 disabled={createMutation.isPending}
                 className="bg-blue-600 hover:bg-blue-700 text-white"
               >
-                {createMutation.isPending ? (
+                {!onlineManager?.isOnline() && createMutation.isPending ? (
                   <div className="flex items-center">
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                     Creating...
@@ -142,3 +149,5 @@ export function NewRecordPage() {
     </div>
   );
 }
+
+export default NewRecordPage
