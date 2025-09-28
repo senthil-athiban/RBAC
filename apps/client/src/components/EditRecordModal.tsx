@@ -1,8 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -13,9 +11,8 @@ import { Save, X } from 'lucide-react';
 import { useEffect } from 'react';
 import { Record } from '@/types';
 import { toast } from 'sonner';
-import { recordApi } from '@/lib/api';
 import { RecordFormData, recordSchema } from '@/schema/record';
-import { AxiosError } from 'axios';
+import { useUpdateRecord } from '@/api/records/mutation';
 // import { recordsCollection } from '@/api/records/queries';
 
 interface EditRecordModalProps {
@@ -25,7 +22,6 @@ interface EditRecordModalProps {
 }
 
 export function EditRecordModal({ record, isOpen, onClose }: EditRecordModalProps) {
-  const queryClient = useQueryClient();
   const {
     register,
     handleSubmit,
@@ -44,54 +40,58 @@ export function EditRecordModal({ record, isOpen, onClose }: EditRecordModalProp
     }
   }, [record, reset]);
 
-  const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: RecordFormData }) =>
-      recordApi.editRecord(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['records'] });
-      toast.success('Record updated successfully')
-      onClose();
-    },
-    onError: (error) => {
-      console.log('Failed to update record', error);
-      toast.error(error instanceof AxiosError ? error?.response?.data?.message : 'Failed to update record');
-    },
-  });
+  const updateMutation = useUpdateRecord();
+
+  //   const onSubmit = async (data: RecordFormData) => {
+  //     updateMutation.mutate({
+  //       id: record._id,
+  //       data: {
+  //         name: data.name,
+  //         description: data.description || undefined,
+  //       },
+  //     }, {
+  //       onSuccess: () => {
+  //         toast.success('Record updated successfully')
+  //         onClose();
+  //       }
+  //     });
+
+  //     // const local = recordsCollection.get(record._id);
+  //     // console.log('local:', local);
+  // // if (!local) {
+  // //   console.warn(`Record ${record._id} not in local DB yet`);
+  // //   return;
+  // // }
+
+  //     // recordsCollection.update(record._id, (draft) => {
+  //     //   draft.name = data.name;
+  //     //   draft.description = data.description
+  //     // });
+
+  //     // await updateMutation.mutateAsync({
+  //     //   data: data,
+  //     //   id: record._id
+  //     // });
+
+  //     onClose();
+  //   };
 
   const onSubmit = async (data: RecordFormData) => {
-    // updateMutation.mutate({
-    //   id: record._id,
-    //   data: {
-    //     name: data.name,
-    //     description: data.description || undefined,
-    //   },
-    // }, {
-    //   onSuccess: () => {
-    //     toast.success('Record updated successfully')
-    //     onClose();
-    //   }
-    // });
-
-    // const local = recordsCollection.get(record._id);
-    // console.log('local:', local);
-// if (!local) {
-//   console.warn(`Record ${record._id} not in local DB yet`);
-//   return;
-// }
-
-    // recordsCollection.update(record._id, (draft) => {
-    //   draft.name = data.name;
-    //   draft.description = data.description
-    // });
-
-    await updateMutation.mutateAsync({
-      data: data,
-      id: record._id
+    updateMutation.mutate({
+      id: record._id,
+      data: {
+        name: data.name,
+        description: data.description || undefined,
+      },
+    }, {
+      onSuccess: () => {
+        toast.success('Record updated successfully')
+        onClose();
+      }
     });
 
     onClose();
   };
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md bg-white/95 backdrop-blur-sm border-0 shadow-2xl">
@@ -106,8 +106,8 @@ export function EditRecordModal({ record, isOpen, onClose }: EditRecordModalProp
           {updateMutation.error && (
             <Alert className="border-red-200 bg-red-50">
               <AlertDescription className="text-red-700">
-                {updateMutation.error instanceof Error 
-                  ? updateMutation.error.message 
+                {updateMutation.error instanceof Error
+                  ? updateMutation.error.message
                   : 'Failed to update record'}
               </AlertDescription>
             </Alert>

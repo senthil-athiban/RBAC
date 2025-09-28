@@ -24,8 +24,8 @@ router.post('/', checkWriteAccess, async (req: Request, res: Response) => {
     try {
         const { name, description } = req.body;
         const user = req.user;
-        await new Record({name, description, user: user.id }).save();
-        return res.status(201).json({ message: 'New record has been created' });
+        const record = await new Record({name, description, user: user.id }).save();
+        return res.status(201).json({ record });
     } catch (error) {
         console.log('failed to create records:', error);
         return res.status(500).json({ message: 'Failed to create new record' });

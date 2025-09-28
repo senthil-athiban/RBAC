@@ -2,13 +2,22 @@ import { LoginPayload, LoginResponse, RegisterPayload, UserResponse } from "@/ty
 import axiosInstance from "./axios";
 import { GetRecordResponse } from "@/types";
 
+interface CreateRecordResponse {
+     record: {
+        name: string;
+        description: string;
+        user: string;
+        _id: string;
+        createdAt: string;
+        updatedAt: string;
+        __v: number;
+    }
+}
 const recordApi = {
     getRecords: () => axiosInstance.get<GetRecordResponse>('/record'),
     editRecord: (recordId: string, payload: { name: string; description?: string }) => axiosInstance.post(`/record/${recordId}`, payload),
     deleteRecord: (recordId: string) => axiosInstance.delete(`/record/${recordId}`),
-    createRecord: (payload:{name: string, description?: string}) => {
-        return axiosInstance.post(`/record`, payload)
-    }
+    createRecord: (payload:{name: string, description?: string}) => axiosInstance.post<CreateRecordResponse>(`/record`, payload)
 }
 
 const authApi = {

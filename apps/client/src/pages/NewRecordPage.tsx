@@ -32,9 +32,10 @@ function NewRecordPage() {
   console.log('createMutation.isSuccess', createMutation.isSuccess);
 
   const onSubmit = (data: RecordFormData) => {
-    createMutation.mutate({
+    createMutation.mutateAsync({
       name: data.name,
-      description: data.description || undefined,
+      description: data.description || '',
+      _id: `temp-${Date.now()}`,
     }, {
       onSuccess: () => {
         

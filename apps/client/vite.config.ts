@@ -3,27 +3,27 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import { VitePWA } from 'vite-plugin-pwa';
-import { readFileSync } from 'fs';
-import mkcert from 'vite-plugin-mkcert';
+// import { readFileSync } from 'fs';
+// import mkcert from 'vite-plugin-mkcert';
 
 export default defineConfig({
-  server: {
-    https: {
-      key: readFileSync('./localhost+1-key.pem'),
-      cert: readFileSync('./localhost+1.pem'),
-    },
-  },
-  preview: {
-    https: {
-      key: readFileSync('./localhost+1-key.pem'),
-      cert: readFileSync('./localhost+1.pem'),
-    },
-  },
+  // server: {
+  //   https: {
+  //     key: readFileSync('./localhost+1-key.pem'),
+  //     cert: readFileSync('./localhost+1.pem'),
+  //   },
+  // },
+  // preview: {
+  //   https: {
+  //     key: readFileSync('./localhost+1-key.pem'),
+  //     cert: readFileSync('./localhost+1.pem'),
+  //   },
+  // },
   plugins: [
     react(),
-    mkcert(),
+    // mkcert(),
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
       includeAssets: ['vite.svg'], // optional: static assets
       manifest: {
         name: 'My Vite PWA App',

@@ -1,14 +1,13 @@
 import { userApi } from "@/lib/api"
-import { useQuery } from "@tanstack/react-query"
+import { useOfflineQuery } from "../records/queries"
 
 export const useGetUser = (enabled: boolean) => {
-    return useQuery({
+    return useOfflineQuery({
         queryKey: ['user'],
         queryFn: () => userApi.getCurrentUser(),
         select: (res) => res.data,
         staleTime: 5 * 60 * 1000,
         gcTime: 10 * 60 * 1000,
         enabled: enabled,
-        networkMode: 'offlineFirst'
     })
 }

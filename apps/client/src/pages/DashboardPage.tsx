@@ -19,6 +19,7 @@ import UserHasAccess from '@/components/auth/UserHasAccess';
 import { Permissions, PermissionTypes } from 'core';
 import { useAuth } from '@/context/auth.context';
 import { EditRecordModal } from '@/components/EditRecordModal';
+// import { queryClient } from '@/App';
 // import loadableVisibility from "react-loadable-visibility/loadable-components";
 
 // const VisibilityEmojiPicker = loadableVisibility(() => import("./emoji"), {
@@ -28,6 +29,9 @@ import { EditRecordModal } from '@/components/EditRecordModal';
 export function DashboardPage() {
   const [editingRecord, setEditingRecord] = useState<Record | null>(null);
   const [deletingRecordId, setDeletingRecordId] = useState<string | null>(null);
+  // const recordsData = queryClient.getQueryData(recordsQuery.queryKey);
+  // console.log('records:', recordsData);
+
   const navigate = useNavigate();
 
   const { logout } = useAuth();
@@ -110,7 +114,7 @@ export function DashboardPage() {
             <CardTitle className="text-lg font-medium text-blue-100">Total Records</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">{records.length}</div>
+            <div className="text-3xl font-bold">{records?.length}</div>
           </CardContent>
         </Card>
 
@@ -120,11 +124,11 @@ export function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">
-              {records.filter(record => {
+              {records?.filter(record => {
                 const weekAgo = new Date();
                 weekAgo.setDate(weekAgo.getDate() - 7);
-                return new Date(record.createdAt) > weekAgo;
-              }).length}
+                return new Date(record?.createdAt) > weekAgo;
+              })?.length}
             </div>
           </CardContent>
         </Card>
@@ -135,11 +139,11 @@ export function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">
-              {records.filter(record => {
+              {records?.filter(record => {
                 const today = new Date();
-                const recordDate = new Date(record.updatedAt);
+                const recordDate = new Date(record?.updatedAt);
                 return recordDate.toDateString() === today.toDateString();
-              }).length}
+              })?.length}
             </div>
           </CardContent>
         </Card>
@@ -156,7 +160,7 @@ export function DashboardPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {records.length === 0 ? (
+          {records?.length === 0 ? (
             <div className="text-center py-12">
               <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">No records found</h3>
@@ -182,7 +186,7 @@ export function DashboardPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {records.map((record) => (
+                  {records?.map((record) => (
                     <TableRow key={record._id} className="hover:bg-gray-50/50 transition-colors">
                       <TableCell className="font-medium text-gray-900">{record?.name}</TableCell>
                       <TableCell className="text-gray-600 max-w-md">

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { lazy, Suspense } from 'react';
-import { MutationCache, QueryClient } from '@tanstack/react-query';
+import { MutationCache, onlineManager, QueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import './App.css';
 import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom';
@@ -15,9 +15,11 @@ import { PublicRoute } from './components/auth/PublicRoute';
 import { Permissions, PermissionTypes } from 'core';
 // import { createIDBPersister } from './lib/queryClient';
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister'
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 
 import { DashboardPage } from './pages/DashboardPage';
-import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
+import { recordApi } from './lib/api';
+import { RecordFormData } from './schema/record';
 
 const AuthLayout = () => (
   <div className='w-full'>
@@ -33,11 +35,11 @@ const PublicLayout = () => (
   </PublicRoute>
 );
 
-const queryClient = new QueryClient({
+// eslint-disable-next-line react-refresh/only-export-components
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      // Queries will work offline using cached data
-      networkMode: 'offlineFirst',
+      gcTime: 1000 * 60 * 60 * 24,
     },
     mutations: {
       // Mutations will be paused when offline and resumed when back online
@@ -61,8 +63,14 @@ const queryClient = new QueryClient({
 });
 
 const persister = createSyncStoragePersister({
-  storage: window.localStorage,
+  storage: window.localStorage
 })
+
+onlineManager.setOnline(navigator.onLine)
+
+// Optionally listen to events
+window.addEventListener('online', () => onlineManager.setOnline(true))
+window.addEventListener('offline', () => onlineManager.setOnline(false))
 
 // const persister = createIDBPersister();
 
@@ -74,6 +82,21 @@ const persister = createSyncStoragePersister({
 //       (await queryClient.fetchQuery(query))
 //     )
 //   }
+
+queryClient.setMutationDefaults(['records'], {
+  mutationFn: async (newRecord: any) => {
+    await queryClient.invalidateQueries({ queryKey: ['records'] });
+    return recordApi.createRecord(newRecord);
+  }
+});
+
+queryClient.setMutationDefaults(['edit-record'], {
+  mutationFn: ({ id, data }: { id: string; data: RecordFormData }) =>
+    recordApi.editRecord(id, data),
+  onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['records'] });
+    },
+});
 
 function App() {
   const router = createBrowserRouter([
@@ -136,16 +159,25 @@ function App() {
     }
   ]);
 
+  console.log('mode:', onlineManager.isOnline());
   return (
     <PersistQueryClientProvider
       client={queryClient}
-      persistOptions={{ persister }}
-      onSuccess={() => {
-        // resume mutations after initial restore from localStorage was successful
-        queryClient.resumePausedMutations().then(() => {
-          queryClient.invalidateQueries()
-        })
+      persistOptions={{ 
+        persister,
       }}
+      onSuccess={ async () => {
+        console.log('REsuming....');
+        // resume mutations after initial restore from localStorage was successful
+        // await queryClient.resumePausedMutations().then( async () => {
+        //   await queryClient.invalidateQueries()
+        // })
+        // const mutations = queryClient.getMutationCache().getAll();
+        // await Promise.all(mutations.map( async (mutate) => {
+        //   await mutate.execute(mutate.state);
+        // }));
+      }}
+      
     >
       <Toaster />
       <ReactQueryDevtools />
